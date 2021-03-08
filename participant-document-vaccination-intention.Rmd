@@ -37,6 +37,23 @@ vaxxData <- vaxxData %>%
 summary(vaxxData)
 ```
 
+## Table of Variables
+  
+| Variable Name                 |     Variable Type    |              
+|------------------------------	|----------------------|
+| flu.shot.history 	            | Nominal              |
+| positive.test 	              | Nominal              |
+| preexisting.condition         | Nominal              |
+| wears.mask 	                  | Nominal              |
+| political.beliefs             | Ordinal              |
+| education.level               | Ordinal              |                                                    
+| perceived.severity            | Ordinal              |                                                
+| perceived.benefit             | Ordinal              |                                      
+| perceived.susceptibility      | Ordinal              |                                                
+| gender                        | Binary               |
+| age.cat                       | Ordinal              |
+| age                           | Continuous           |
+
 ## Basic Bar Graph
 
 ```{r}
