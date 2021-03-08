@@ -4,4 +4,4 @@ This repository contains the two files you will work with for the March 9, 2021 
 
 ## Downloading the files 
 
-To download the two files, 
+To download the two files, click on the green "Code" button and choose the "Download to ZIP" file
