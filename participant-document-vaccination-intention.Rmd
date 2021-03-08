@@ -1,0 +1,309 @@
+---
+title: "Plotting Vaccination Intention"
+authors: "Zoey Dlott & Megan Richard""
+subtitle: "An intro to R data viz in ggplot2"
+output: html_document
+
+---
+
+## BEFORE YOU BEGIN
+
+* Make sure you have the following packages installed: tidyverse, here
+* Save this R-Markdown file AND the vaccine_intention.csv file in the SAME FOLDER on your computer (the code below will only load the data if it is saved in the folder *with* this document)
+
+## Load needed packages
+
+``` {r chunk1}
+library(package = "here")
+library(package = "tidyverse")
+```
+
+## Import the data set
+
+``` {r chunk2}
+# use here to get R to look in the same folder for the data
+here()
+# import the data
+vaxxData <- read_csv("vaccine_intention.csv")
+```
+
+## Explore the data
+
+```{r}
+# change character variable types to categorical
+vaxxData <- vaxxData %>%
+  mutate_if(is.character, as.factor)
+# show the data
+summary(vaxxData)
+```
+
+## Basic Bar Graph
+
+```{r}
+vaxxData %>%
+  ggplot(aes(x = vaccination.intention)) +
+  geom_bar() 
+```
+
+## Fancier Bar Graph
+
+```{r}
+
+vaxxData %>%
+  ggplot(aes(x = vaccination.intention)) +
+  geom_bar(fill = "slategray1") + 
+  labs(x = "Vaccination Intention ",
+       y = "Number of People",
+       title = "Figure 1: COVID-19 Vaccination Intention") +
+  theme_minimal()
+```
+
+# You Try it!
+
+Make a bar graph of **flu shot history** with the Figure 1 code in your R Markdown file.
+
+Edit the code to: 
+
+* Change the color of the bars by replacing "slategray1" the name of your favorite color (e.g., orange) or using a color found on the https://colorbrewer2.org/ website
+
+* Add labels for the axes and a title inside the quote marks
+
+* Try another theme, you can find them here: https://ggplot2.tidyverse.org/reference/ggtheme.html
+
+When you have completed the changes, click the little green arrow on the top right of the code chunk to run the code.
+
+```{r}
+# Figure 1
+vaxxData %>%
+  ggplot(aes(x = flu.shot.history)) +
+  geom_bar(fill = "slategray1") + 
+  labs(x = "", y = "", title = "") +
+  theme_minimal()
+
+```
+
+## Basic Box Plot
+
+```{r}
+
+vaxxData %>%
+  ggplot(aes(x = vaccination.intention, y = age)) +
+  geom_boxplot()
+
+```
+
+## Adding Layers to Box Plot
+```{r}
+
+vaxxData %>%
+  ggplot(aes(x = vaccination.intention, y = age, 
+             fill = vaccination.intention)) +
+  geom_boxplot() +
+  labs(x = "Vaccination Intention ",
+       y = "Age",
+       title = "Vaccination intention by Age") +
+  theme(legend.position = "none")
+
+```
+
+## Pretty But Not Useful Bar Plot
+
+```{r}
+
+vaxxData %>%
+  ggplot(aes(x = vaccination.intention, 
+             fill = flu.shot.history)) +
+  geom_bar() +
+  scale_fill_brewer(palette = 'Set3', 
+                    name = "Flu Shot History") +
+  labs(x = "Vaccine Intention", 
+       y = "Number of Individuals",
+       title = "Figure 2: Relationship between COVID\nVaccine Intention and Flu Shot History") +
+  theme_minimal()
+
+
+```
+
+## Basic Grouped Bar Plot
+
+```{r}
+
+vaxxData %>%
+  group_by(flu.shot.history, vaccination.intention) %>%
+  count() %>%
+  group_by(vaccination.intention) %>%
+  mutate(perc = 100*n/sum(n)) %>%
+  ggplot(aes(x = vaccination.intention, y = perc, 
+             fill = flu.shot.history)) +
+  geom_bar(position = "dodge", stat = "identity") +
+  labs(x = "Vaccine Intention", 
+       y = "Percent of Individuals",
+       title = "Figure 3: Relationship between COVID\nVaccine Intention and Flu Shot History") +
+  scale_fill_manual(values = c("skyblue", "cornflowerblue"),
+                    name = "Flu Shot History")
+
+
+```
+
+# You Try it!
+
+Customize the bar graph of the vaccination intention and flu shot history with the Figure 2 code in your R Markdown file.
+
+* Copy and paste the code for flu.shot.history and Edit the code to:
+
+* Change the flu shot history variable to the `political.beliefs` variable
+
+* Change the colors of the bars by replacing "plum2", "plum3", "plum4" with the names of your favorite colors (e.g., orange) and add 3 more colors for all the categories of political beliefs. Try finding colors on the https://colorbrewer2.org/ website (HINT: Political beliefs has 6 colors, you'll need to add 3 more colors to the list!)
+
+* Add labels for the axes and a title inside the quote marks
+
+* Try another theme, you can find them here: https://ggplot2.tidyverse.org/reference/ggtheme.html
+
+When you have completed the changes, click the little green arrow on the top right of the code chunk to run the code.
+
+```{r}
+
+```
+
+## Answer 2 Clarify
+
+```{r}
+
+vaxxData %>%
+  group_by(political.beliefs, vaccination.intention) %>%
+  count() %>%
+  group_by(political.beliefs) %>%
+  mutate(perc = 100*n/sum(n)) %>%
+  mutate(political.beliefs = factor(political.beliefs, 
+                                    levels=c("Very Liberal", 
+                                             "Somewhat Liberal", 
+                                             "Mixed", 
+                                             "Somewhat Conservative",  
+                                             "Very Conservative",
+                                             "Prefer not to answer"))) %>%
+  ggplot(aes(x = political.beliefs, y = perc, 
+             fill = vaccination.intention)) +
+  geom_bar(position = "dodge", stat = "identity") +
+  labs(x = "Political Beliefs", 
+       y = "Percent of Individuals",
+       title = "Relationship between COVID Vaccine Intention\nand Political Beliefs") +
+  scale_fill_manual(values = c("plum2","plum3","plum4"),
+                    name = "Vaccination Intention",
+                    guide = guide_legend(reverse = TRUE)) +
+  theme_minimal() +
+  coord_flip()
+
+```
+
+
+## Basic Histogram
+
+```{r}
+
+vaxxData %>%
+  ggplot(aes(x = age)) +
+  geom_histogram(binwidth = 1.5) +
+  scale_fill_brewer(palette = 'Set2', 
+                    name = "Ages of Participants") 
+
+```
+
+## Fancy Histogram
+
+```{r my_1var_histo_fancy, include = FALSE}
+
+vaxxData %>%
+  ggplot(aes(x= age)) + 
+  geom_histogram(breaks=seq(10, 60, by = 1), 
+                 col="blue", 
+                 fill="slategrey", 
+                 alpha = .2) + 
+  labs(title="Histogram of Age") +
+  labs(x="Age", y="Count") + 
+  xlim(c(18, 60)) 
+
+```
+
+## Basic Violin Plot
+
+```{r}
+
+vaxxData %>% 
+  ggplot(aes(x = vaccination.intention, y = age)) +
+  geom_violin(aes(fill = vaccination.intention)) +
+  labs(y = "Age in Years", 
+       x = "Do You Intend to get the COVID-19 Vaccine?",
+       title = "Figure 7: Vaccination Intention by Age") + 
+  scale_fill_brewer(palette = "Set2", guide = FALSE) + 
+  theme_minimal()
+
+```
+
+## Horizontal Violin Plot
+
+```{r}
+
+vaxxData %>% 
+  ggplot(aes(x = political.beliefs, y = age)) +
+  geom_violin(aes(fill = political.beliefs)) +
+  labs(y = "Age in Years", x = "Political Beliefs",
+       title = "Figure 9: Political Beliefs by Age") + 
+  scale_fill_brewer(palette = "Set2", guide = FALSE) + 
+  coord_flip() +
+  theme_minimal()
+
+```
+
+## Super Fancy Boxplot & Violin Plot
+
+```{r}
+
+vaxxData %>%
+  ggplot(aes(x = vaccination.intention, y = age)) +
+  geom_violin(aes(color = vaccination.intention), fill = "white",
+              alpha = .8) +
+  geom_boxplot(aes(color = vaccination.intention, fill = vaccination.intention), 
+               alpha = .3) +
+  geom_jitter(aes(color = vaccination.intention), alpha = .4) +
+  labs(x = "Vaccination Intention",
+       y = "Age (in years)",
+       title = "Figure 6: Vaccination Intention by Age") +
+  scale_color_brewer(palette = "Set2", guide = FALSE) +
+  scale_fill_brewer(palette = "Set2", guide = FALSE) +
+  theme_minimal(base_size = 14)
+
+```
+
+# You Try it!
+
+Edit the Super Fancy Boxplot & Violin Plot code to: 
+
+* Change the categorical variable (keep age). Remember to change it everywhere it shows up!
+
+* Change the colors by replacing the Set2 palette with a different palette found on the http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/ website (bottom of page). Remember to change it everywhere it shows up!
+
+* Add labels for the axes and a title inside the quote marks
+
+* Try another theme, you can find them here: https://ggplot2.tidyverse.org/reference/ggtheme.html
+
+When you have completed the changes, click the little green arrow on the top right of the code chunk to run the code.
+
+```{r}
+
+vaxxData %>%
+  ggplot(aes(x = vaccination.intention, y = age)) +
+  geom_violin(aes(color = vaccination.intention), fill = "white",
+              alpha = .8) +
+  geom_boxplot(aes(color = vaccination.intention, fill = vaccination.intention), 
+               alpha = .3) +
+  geom_jitter(aes(color = vaccination.intention), alpha = .4) +
+  labs(x = "Vaccination Intention",
+       y = "Age (in years)",
+       title = "Figure 6: Vaccination Intention by Age") +
+  scale_color_brewer(palette = "Set2", guide = FALSE) +
+  scale_fill_brewer(palette = "Set2", guide = FALSE) +
+  theme_minimal(base_size = 14)
+
+```
+
+## The End!
