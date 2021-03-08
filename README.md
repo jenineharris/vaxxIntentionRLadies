@@ -1,6 +1,6 @@
 ## Vaccine Intention & Data Visualization
 
-This repository contains the two files you will work with for the March 9, 2021 R-Ladies St. Louis workshop. The two files are:
+This repository contains the two files you will work with for the March 9, 2021 R-Ladies St. Louis workshop by Zoey Dlott & Megan Richard. The two files are:
 
 * participant-document-vaccination-intention.Rmd (this is the code file for the workshop)
 
